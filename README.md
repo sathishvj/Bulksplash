@@ -27,7 +27,7 @@ Usage: index [options]
     -V, --version      output the version number
     --amount [limit]   Amount of pictures to download (Default is 10)
     --folder [name]    Name of the folder you want to save the images to (Default is "images")
-    --width [w]        Width of images (Default is 1200)
+    --width [w]        ![vj] made default width 960
     --height [h]       Height of images (Default is 800)
     --featured [f]     Download featured images only
     --search [s]       Download images with a specific term
@@ -35,5 +35,8 @@ Usage: index [options]
 ````
 
 ---
+
+[vj] updates
+* file names use the search term, a timestamp, and an index.  So it doesn't overwrite existing files.  The search term used in the file name allows it to be searched faster.
 
 Please feel free to contribute to this tiny project and make it better :)

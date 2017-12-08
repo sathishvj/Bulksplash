@@ -27,12 +27,36 @@ if(!program.orientation){
     program.orientation= "landscape"
 }
 
+if (!program.width) {
+	program.width=960;
+}
+
 console.log("\nWelcome to Bulksplash! (Powered by Unsplash.com)")
 
 console.log("\nDownloading " + program.amount + " random images :)")
 
 var ProgressBar = require('progress');
 var bar = new ProgressBar(':bar', { total: parseInt(program.amount) });
+
+function dateFormat () {
+  var date = new Date();
+  var fstr = '%Y-%m-%d-%H-%M-%S';
+  //utc = utc ? 'getUTC' : 'get';
+  var utc = 'get';
+  return fstr.replace (/%[YmdHMS]/g, function (m) {
+    switch (m) {
+    case '%Y': return date[utc + 'FullYear'] (); // no leading zeros required
+    case '%m': m = 1 + date[utc + 'Month'] (); break;
+    case '%d': m = date[utc + 'Date'] (); break;
+    case '%H': m = date[utc + 'Hours'] (); break;
+    case '%M': m = date[utc + 'Minutes'] (); break;
+    case '%S': m = date[utc + 'Seconds'] (); break;
+    default: return m.slice (1); // unknown code, remove %
+    }
+    // add leading zero if required
+    return ('0' + m).slice (-2);
+  });
+}
 
 function download(url, dest, dirname) {
     var dir = './' + dirname;
@@ -69,7 +93,11 @@ request(url, (error, response, body) => {
     if (!error && response.statusCode === 200) {
         var body = JSON.parse(body);
 
-        
+		var rootName = 'image';
+		if (program.search) {
+			rootName = program.search;
+		}
+
         for (i in body){
             if(program.width || program.height){
                 var img = body[i]["urls"].custom
@@ -78,7 +106,7 @@ request(url, (error, response, body) => {
             }
 
             console.log(body[i]["user"].name + " (" + body[i]["user"].links["html"] + ")")
-            download(img, path.join(__dirname, "/" + program.folder + "/image-" + i + ".jpg"), program.folder)
+            download(img, path.join(__dirname, "/" + program.folder + "/" + rootName + "-" + dateFormat() + "-" + i + ".jpg"), program.folder)
         }
 
     } else {
